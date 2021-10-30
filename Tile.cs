@@ -11,7 +11,7 @@ namespace ReversiBot
     
     public class Tile
     {
-        private TileColor Color { get; set; }
+        public TileColor Color { get; private set; }
         private Tuple<int, int> Coordinates { get; set; }
         private bool _placed = false;
 
@@ -21,7 +21,7 @@ namespace ReversiBot
             Coordinates = Tuple.Create(-1, -1);
         }
 
-        private Tuple<int, int> Place(int x, int y)
+        public Tuple<int, int> Place(int x, int y)
         {
             _placed = true;
             Coordinates = Tuple.Create(x, y);
@@ -32,6 +32,21 @@ namespace ReversiBot
         {
             if (_placed)
                 throw new InvalidOperationException("Tile already placed at " + coords);
+            var (x, y) = StringToCoordinates(coords);
+            return Place(x, y);
+        }
+
+        public TileColor Flip()
+        {
+            if (Color == TileColor.Black)
+                Color = TileColor.White;
+            else
+                Color = TileColor.Black;
+            return Color;
+        }
+
+        public static (int, int) StringToCoordinates(string coords)
+        {
             var x = coords[0] switch
             {
                 'a' => 0,
@@ -45,16 +60,7 @@ namespace ReversiBot
                 _ => -1
             };
             var y = coords[1] - '0' - 1;
-            return Place(x, y);
-        }
-
-        public TileColor Flip()
-        {
-            if (Color == TileColor.Black)
-                Color = TileColor.White;
-            else
-                Color = TileColor.Black;
-            return Color;
+            return (x, y);
         }
     }
 }
