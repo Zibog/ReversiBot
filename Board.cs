@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 
@@ -57,6 +59,24 @@ namespace ReversiBot
         {
             var (x, y) = Tile.StringToCoordinates(coords);
             return Place(x, y, color);
+        }
+
+        private bool IsAdjacent(int x, int y)
+        {
+            for(int xi = Math.Max(0, x - 1); xi <= x + 1 && xi < Size; xi++)
+                for (int yi = Math.Max(0, y - 1); yi <= y + 1 && yi < Size; yi++)
+                    if (_board[xi, yi] != null) return true;
+            return false;
+        }
+
+        public List<Tuple<int, int>> GetOpenAdjacentTiles()
+        {
+            var openAdjacent = new List<Tuple<int, int>>();
+            for (int x = 0; x < Size; x++)
+                for (int y = 0; y < Size; y++)
+                    if (_board[x, y] == null && IsAdjacent(x, y))
+                        openAdjacent.Add(Tuple.Create(x, y));
+            return openAdjacent;
         }
 
         public bool IsFull() => _board.Cast<Tile>().All(tile => tile != null);
