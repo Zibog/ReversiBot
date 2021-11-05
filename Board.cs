@@ -11,7 +11,7 @@ namespace ReversiBot
         /// <summary>
         /// Size of board's dimensions
         /// </summary>
-        private const uint Size = 8;
+        public const uint Size = 8;
 
         private readonly Tile[,] _board;
 
@@ -34,7 +34,7 @@ namespace ReversiBot
             return (Board) fmt.Deserialize(ms);
         }
 
-        private Tile this[int x, int y] => _board[x, y];
+        public Tile this[int x, int y] => _board[x, y];
 
         public Tile this[string coords]
         {
