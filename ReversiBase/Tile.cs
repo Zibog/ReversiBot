@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ReversiBot
+namespace ReversiBase
 {
     public enum TileColor
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ReversiBot
+namespace ReversiBase
 {
     class Play
     {

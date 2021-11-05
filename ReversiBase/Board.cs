@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 
-namespace ReversiBot
+namespace ReversiBase
 {
     public class Board
     {
@@ -15,7 +15,7 @@ namespace ReversiBot
 
         private readonly Tile[,] _board;
 
-        public Board(uint size)
+        public Board(uint size = Size)
         {
             _board = new Tile[size, size];
         }
