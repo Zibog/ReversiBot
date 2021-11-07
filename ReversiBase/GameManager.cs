@@ -56,6 +56,26 @@ namespace ReversiBase
             }
             return GetGame();
         }
+
+        public Play OutsidePlay(Play p)
+        {
+            if (p == null) return null;
+            var index = p.Color == TileColor.Black ? 0 : 1;
+            var agent = Agents[index];
+
+            if (agent != null)
+            {
+                Console.WriteLine("Do you think you're AI?");
+                return null;
+            }
+
+            if (_game.IsPlayerBlack && p.Color != TileColor.Black
+                || !_game.IsPlayerBlack && p.Color != TileColor.White)
+                throw new ArgumentException();
+
+            _humanPlay[index] = p;
+            return p;
+        }
         
         public Game GetGame() => new(_game);
 
