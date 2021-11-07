@@ -6,7 +6,7 @@ namespace ReversiBase
     public class Game
     {
         public bool IsPlayerBlack { set; get; }
-        private Board Board { set; get; }
+        public Board Board { set; get; }
         private bool _deadlock = false;
         public TileColor? Winner
         {
