@@ -107,6 +107,13 @@ namespace ReversiBase
             return res;
         }
 
-        private bool GameOver() => Board.IsFull() || _deadlock;
+        public Game ForkGame(Play play)
+        {
+            var game = new Game(this);
+            game.UsePlay(play);
+            return game;
+        }
+
+        public bool GameOver() => Board.IsFull() || _deadlock;
     }
 }
