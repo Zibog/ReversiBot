@@ -1,9 +1,8 @@
 ﻿using System;
-using ReversiBase;
 
-namespace ReversiAI
+namespace ReversiBase
 {
-    class Solver
+    public class Solver
     {
         private Func<Game, int> _heuristic;
         public int MaxPly { private set; get; }
