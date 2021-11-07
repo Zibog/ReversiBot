@@ -5,7 +5,7 @@ namespace ReversiBase
 {
     public class Game
     {
-        private bool IsPlayerBlack { set; get; }
+        public bool IsPlayerBlack { set; get; }
         private Board Board { set; get; }
         private bool _deadlock = false;
         public TileColor? Winner
@@ -67,6 +67,11 @@ namespace ReversiBase
         {
             IsPlayerBlack = !IsPlayerBlack;
         }
+        
+        public TileColor ColorAt(int x, int y)
+        {
+            return Board[x, y] == null ? TileColor.Blank : Board[x, y].Color;
+        }
 
         public void UsePlay(Play p)
         {
@@ -83,7 +88,7 @@ namespace ReversiBase
             _deadlock = i >= 2;
         }
 
-        private Dictionary<Tuple<int, int>, Play> PossiblePlays(bool otherPlayer = false)
+        public Dictionary<Tuple<int, int>, Play> PossiblePlays(bool otherPlayer = false)
         {
             var possiblePositions = Board.GetOpenAdjacentTiles();
             var res = new Dictionary<Tuple<int, int>, Play>();
