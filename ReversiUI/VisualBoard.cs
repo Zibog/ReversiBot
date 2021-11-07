@@ -11,9 +11,9 @@ using ReversiBase;
 
 namespace ReversiUI
 {
-    public partial class Form1 : Form
+    public partial class VisualBoard : Form
     {
-        public Form1()
+        public VisualBoard()
         {
             InitializeComponent();
         }

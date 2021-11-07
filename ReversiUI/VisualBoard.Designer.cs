@@ -1,7 +1,7 @@
 ﻿
 namespace ReversiUI
 {
-    partial class Form1
+    partial class VisualBoard
     {
         /// <summary>
         ///  Required designer variable.
