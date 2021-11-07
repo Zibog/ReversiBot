@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ReversiBase
 {
-    class Play
+    public class Play
     {
         public TileColor Color { private set; get; }
         public Tuple<int, int> Coords { private set; get; }

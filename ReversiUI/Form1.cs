@@ -16,7 +16,6 @@ namespace ReversiUI
         public Form1()
         {
             InitializeComponent();
-            Tile t;
         }
 
     }

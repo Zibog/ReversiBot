@@ -45,7 +45,9 @@ namespace ReversiBase
             }
         }
 
-        private Tile Place(int x, int y, TileColor color)
+        public Tile this[Tuple<int, int> coords] => this[coords.Item1, coords.Item2];
+
+        public Tile Place(int x, int y, TileColor color)
         {
             if (_board[x, y] != null)
                 return null;

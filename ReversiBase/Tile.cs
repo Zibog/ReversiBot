@@ -12,20 +12,20 @@ namespace ReversiBase
     public class Tile
     {
         public TileColor Color { get; private set; }
-        private Tuple<int, int> Coordinates { get; set; }
+        public Tuple<int, int> Coords { get; private set; }
         private bool _placed = false;
 
         public Tile(TileColor color)
         {
             Color = color;
-            Coordinates = Tuple.Create(-1, -1);
+            Coords = Tuple.Create(-1, -1);
         }
 
         public Tuple<int, int> Place(int x, int y)
         {
             _placed = true;
-            Coordinates = Tuple.Create(x, y);
-            return Coordinates;
+            Coords = Tuple.Create(x, y);
+            return Coords;
         }
 
         public Tuple<int, int> Place(string coords)
