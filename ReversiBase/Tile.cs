@@ -9,6 +9,7 @@ namespace ReversiBase
         White = 2
     }
     
+    [Serializable]
     public class Tile
     {
         public TileColor Color { get; private set; }

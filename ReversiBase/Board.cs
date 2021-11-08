@@ -6,6 +6,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace ReversiBase
 {
+    [Serializable]
     public class Board
     {
         /// <summary>
@@ -83,6 +84,6 @@ namespace ReversiBase
 
         public bool IsFull() => _board.Cast<Tile>().All(tile => tile != null);
 
-        public int GetColorCount(TileColor color) => _board.Cast<Tile>().Count(tile => tile.Color == color);
+        public int GetColorCount(TileColor color) => _board.Cast<Tile>().Count(tile => tile != null && tile.Color == color);
     }
 }
