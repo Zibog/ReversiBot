@@ -7,6 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="VisualBoard.cs" />
+    <Compile Remove="VisualBoard.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="VisualBoard.resx" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ReversiBase\ReversiBase.csproj" />
   </ItemGroup>
 

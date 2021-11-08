@@ -17,7 +17,7 @@ namespace ReversiUI
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new VisualBoard());
+            Application.Run(new ReversiUI());
         }
     }
 }
