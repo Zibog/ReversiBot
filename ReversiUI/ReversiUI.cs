@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Windows.Forms;
 using System.IO;
+using System.Windows.Forms;
 using ReversiBase;
 
 namespace ReversiUI
 {
-    public partial class ReversiUI : Form
+    public partial class ReversiUi : Form
     {
         private enum GameMode
         {
@@ -18,36 +18,36 @@ namespace ReversiUI
             Weighted,
         }
 
-        GameManager manager;
-        Game game;
-        private GameMode whiteMode = GameMode.Human;
-        private GameMode blackMode = GameMode.Human;
-        private int whitePlyVal = 5;
-        private int blackPlyVal = 5;
-        private DataGridView gameBoard;
-        private const int BOARD_SIZE = 8;
-        private Bitmap blank;
-        private Bitmap black;
-        private Bitmap white;
-        private Bitmap hint;
-        private int bitmapPadding = 6;
+        private GameManager _manager;
+        private Game _game;
+        private GameMode _whiteMode = GameMode.Human;
+        private GameMode _blackMode = GameMode.Human;
+        private int _whitePlyVal = 5;
+        private int _blackPlyVal = 5;
+        private readonly DataGridView _gameBoard;
+        private const int BoardSize = 8;
+        private readonly Bitmap _blank;
+        private readonly Bitmap _black;
+        private readonly Bitmap _white;
+        private readonly Bitmap _hint;
+        private const int BitmapPadding = 6;
 
-        Dictionary<Tuple<int, int>, Play> playable;
+        private Dictionary<Tuple<int, int>, Play> _playable;
 
-        public ReversiUI()
+        public ReversiUi()
         {
-            blank = (Bitmap)Image.FromFile(Directory.GetCurrentDirectory().Replace(@"\bin\Debug\net5.0-windows", @"\green.bmp"));
-            black = (Bitmap)Image.FromFile(Directory.GetCurrentDirectory().Replace(@"\bin\Debug\net5.0-windows", @"\black.bmp"));
-            white = (Bitmap)Image.FromFile(Directory.GetCurrentDirectory().Replace(@"\bin\Debug\net5.0-windows", @"\white.bmp"));
-            hint = (Bitmap)Image.FromFile(Directory.GetCurrentDirectory().Replace(@"\bin\Debug\net5.0-windows", @"\hint.bmp"));
+            _blank = (Bitmap)Image.FromFile(Directory.GetCurrentDirectory().Replace(@"\bin\Debug\net5.0-windows", @"\green.bmp"));
+            _black = (Bitmap)Image.FromFile(Directory.GetCurrentDirectory().Replace(@"\bin\Debug\net5.0-windows", @"\black.bmp"));
+            _white = (Bitmap)Image.FromFile(Directory.GetCurrentDirectory().Replace(@"\bin\Debug\net5.0-windows", @"\white.bmp"));
+            _hint = (Bitmap)Image.FromFile(Directory.GetCurrentDirectory().Replace(@"\bin\Debug\net5.0-windows", @"\hint.bmp"));
 
 
-            manager = new GameManager(BOARD_SIZE);
-            game = manager.GetGame();
+            _manager = new GameManager(BoardSize);
+            _game = _manager.GetGame();
 
             InitializeComponent();
 
-            gameBoard = new DataGridView
+            _gameBoard = new DataGridView
             {
                 BackColor = SystemColors.ButtonShadow,
                 ForeColor = SystemColors.ControlText,
@@ -58,14 +58,14 @@ namespace ReversiUI
                 Name = "gameBoard",
             };
 
-            gameBoard.AllowUserToAddRows = false;
+            _gameBoard.AllowUserToAddRows = false;
 
             ConfigureForm();
             SizeGrid();
             CreateColumns();
             CreateRows();
 
-            playable = game.PossiblePlays();
+            _playable = _game.PossiblePlays();
 
             UpdateBoard();
         }
@@ -77,58 +77,51 @@ namespace ReversiUI
         {
             AutoSize = true;
 
-            gameBoard.AllowUserToAddRows = false;
-            gameBoard.CellClick += new
-                DataGridViewCellEventHandler(ClickCell);
-            gameBoard.SelectionChanged += new
-                EventHandler(Change_Selection);
+            _gameBoard.AllowUserToAddRows = false;
+            _gameBoard.CellClick += ClickCell;
+            _gameBoard.SelectionChanged += Change_Selection;
 
-            GamePanel.Controls.Add(gameBoard);
+            GamePanel.Controls.Add(_gameBoard);
         }
 
 
         private void SizeGrid()
         {
-            gameBoard.ColumnHeadersVisible = false;
-            gameBoard.RowHeadersVisible = false;
-            gameBoard.AllowUserToResizeColumns = false; ;
-            gameBoard.AllowUserToResizeRows = false;
-            gameBoard.BorderStyle = BorderStyle.None;
-            gameBoard.RowTemplate.Height = blank.Height +
-                                           2 * bitmapPadding + 1;
-            gameBoard.AutoSize = true;
+            _gameBoard.ColumnHeadersVisible = false;
+            _gameBoard.RowHeadersVisible = false;
+            _gameBoard.AllowUserToResizeColumns = false;
+            _gameBoard.AllowUserToResizeRows = false;
+            _gameBoard.BorderStyle = BorderStyle.None;
+            _gameBoard.RowTemplate.Height = _blank.Height + 2 * BitmapPadding + 1;
+            _gameBoard.AutoSize = true;
         }
 
 
         private void CreateColumns()
         {
-            DataGridViewImageColumn imageColumn;
-            int columnCount = 0;
+            var columnCount = 0;
             do
             {
-                Bitmap unMarked = blank;
-                imageColumn = new DataGridViewImageColumn();
+                var imageColumn = new DataGridViewImageColumn();
 
-                imageColumn.Width = blank.Width + 2 * bitmapPadding + 1;
+                imageColumn.Width = _blank.Width + 2 * BitmapPadding + 1;
 
-                imageColumn.Image = unMarked;
-                gameBoard.Columns.Add(imageColumn);
-                columnCount = columnCount + 1;
+                imageColumn.Image = _blank;
+                _gameBoard.Columns.Add(imageColumn);
+                ++columnCount;
             }
             while (columnCount < Board.Size);
         }
 
         private void CreateRows()
         {
-            for (int i = 0; i < Board.Size; i++)
-            {
-                gameBoard.Rows.Add();
-            }
+            for (var i = 0; i < Board.Size; i++)
+                _gameBoard.Rows.Add();
         }
 
         private void Change_Selection(object sender, EventArgs e)
         {
-            this.gameBoard.ClearSelection();
+            _gameBoard.ClearSelection();
         }
         
         #endregion
@@ -136,107 +129,96 @@ namespace ReversiUI
         private void RenderGameOver()
         {
             var res = MessageBox.Show(
-                "Player " + (game.Winner == TileColor.Black ? "Black " : "White ") +
+                "Player " + (_game.Winner == TileColor.Black ? "Black " : "White ") +
                 "won. Do do you want to play again?", "The End", MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question);
 
             if (res == DialogResult.Yes)
-            {
                 Reset(this, EventArgs.Empty);
-            }
         }
 
         private void ClickCell(object sender, DataGridViewCellEventArgs e)
         {
-            Tuple<int, int> destCoords = Tuple.Create(e.ColumnIndex, e.RowIndex);
+            var destCoords = Tuple.Create(e.ColumnIndex, e.RowIndex);
 
-            playable.TryGetValue(destCoords, out Play p);
-            Play humanPlay = manager.OutsidePlay(p);
+            _playable.TryGetValue(destCoords, out var p);
+            var humanPlay = _manager.OutsidePlay(p);
             if (humanPlay == null) return;
-            Game next = manager.Next();
+            var next = _manager.Next();
             if(next != null)
-            {
-                game = next;
-            }
+                _game = next;
             else
-            {
                 throw new ArgumentException("No human player/other game manager error");
-            }
-            playable = game.PossiblePlays();
+            _playable = _game.PossiblePlays();
             UpdateBoard();
         }
 
         private void UpdateBoard()
         {
-            for (int x = 0; x < Board.Size; x++)
+            for (var x = 0; x < Board.Size; x++)
             {
-                for(int y = 0; y < Board.Size; y++)
+                for(var y = 0; y < Board.Size; y++)
                 {
-                    DataGridViewImageCell cell = (DataGridViewImageCell)gameBoard.Rows[y].Cells[x];
-                    switch (game.ColorAt(x, y))
+                    var cell = (DataGridViewImageCell)_gameBoard.Rows[y].Cells[x];
+                    switch (_game.ColorAt(x, y))
                     {
                         case TileColor.Black:
-                            cell.Value = black;
+                            cell.Value = _black;
                             break;
                         case TileColor.White:
-                            cell.Value = white;
+                            cell.Value = _white;
                             break;
                         default:
-                            if (playable != null && playable.ContainsKey(Tuple.Create(x, y)))
-                            {
-                                cell.Value = hint;
-                            } else
-                            {
-                                cell.Value = blank;
-                            }
+                            if (_playable != null && _playable.ContainsKey(Tuple.Create(x, y)))
+                                cell.Value = _hint;
+                            else
+                                cell.Value = _blank;
                             break;
                     }
                 }
             }
 
-            if (game.Winner != null)
-            {
+            if (_game.Winner != null)
                 RenderGameOver();
-            }
             
-            string player = game.IsPlayerBlack ? "Black" : "White";
-            TileColor playerColor = game.IsPlayerBlack ? TileColor.Black : TileColor.White;
+            var player = _game.IsPlayerBlack ? "Black" : "White";
+            var playerColor = _game.IsPlayerBlack ? TileColor.Black : TileColor.White;
 
-            Console.WriteLine("The tile counting heuristic returns: " + Solver.TileCountHeuristic(game, playerColor) + " for " + player);
-            Console.WriteLine("The corners heuristic returns: " + Solver.CornersHeuristic(game, playerColor) + " for " + player);
-            Console.WriteLine("The weighted heuristic returns: " + Solver.WeightedHeuristic(game, playerColor) + " for " + player);
-            Console.WriteLine("The mobility heuristic returns: " + Solver.TileCountHeuristic(game, playerColor) + " for " + player);
+            Console.WriteLine("The tile counting heuristic returns: " + Solver.TileCountHeuristic(_game, playerColor) + " for " + player);
+            Console.WriteLine("The corners heuristic returns: " + Solver.CornersHeuristic(_game, playerColor) + " for " + player);
+            Console.WriteLine("The weighted heuristic returns: " + Solver.WeightedHeuristic(_game, playerColor) + " for " + player);
+            Console.WriteLine("The mobility heuristic returns: " + Solver.TileCountHeuristic(_game, playerColor) + " for " + player);
         }
 
         private void ChangeGameMode(object sender, EventArgs e)
         {
-            RadioButton c = (RadioButton)sender;
+            var c = (RadioButton)sender;
             if (!c.Checked) return;
             switch (c.Tag)
             {
                 case "cornersWhite":
-                    whiteMode = GameMode.Corners;
+                    _whiteMode = GameMode.Corners;
                     break;
                 case "cornersBlack":
-                    blackMode = GameMode.Corners;
+                    _blackMode = GameMode.Corners;
                     break;
                 case "humanWhite":
-                    whiteMode = GameMode.Human;
+                    _whiteMode = GameMode.Human;
                     break;
                 case "humanBlack":
-                    blackMode = GameMode.Human;
+                    _blackMode = GameMode.Human;
                     break;
                 case "weightedWhite":
-                    whiteMode = GameMode.Weighted;
+                    _whiteMode = GameMode.Weighted;
                     break;
                 case "weightedBlack":
-                    blackMode = GameMode.Weighted;
+                    _blackMode = GameMode.Weighted;
                     break;
                 case "tileWhite":
-                    whiteMode = GameMode.Tile;
+                    _whiteMode = GameMode.Tile;
                     break;
                 case "tileBlack":
-                    blackMode = GameMode.Tile;
+                    _blackMode = GameMode.Tile;
                     break;
             }
             SetNewGame();
@@ -246,88 +228,73 @@ namespace ReversiUI
         {
             Func<Game, TileColor, int> whiteHeuristic = null;
             Func<Game, TileColor, int> blackHeuristic = null;
-            switch (whiteMode)
+            whiteHeuristic = _whiteMode switch
             {
-                case GameMode.Corners:
-                    whiteHeuristic = Solver.CornersHeuristic;
-                    break;
-                case GameMode.Tile:
-                    whiteHeuristic = Solver.TileCountHeuristic;
-                    break;
-                case GameMode.Weighted:
-                    whiteHeuristic = Solver.WeightedHeuristic;
-                    break;
-                case GameMode.Mobility:
-                    whiteHeuristic = Solver.ActualMobilityHeuristic;
-                    break;
-            }
+                GameMode.Corners => Solver.CornersHeuristic,
+                GameMode.Tile => Solver.TileCountHeuristic,
+                GameMode.Weighted => Solver.WeightedHeuristic,
+                GameMode.Mobility => Solver.ActualMobilityHeuristic,
+                _ => whiteHeuristic
+            };
 
-            switch (blackMode)
+            blackHeuristic = _blackMode switch
             {
-                case GameMode.Corners:
-                    blackHeuristic = Solver.CornersHeuristic;
-                    break;
-                case GameMode.Tile:
-                    blackHeuristic = Solver.TileCountHeuristic;
-                    break;
-                case GameMode.Weighted:
-                    blackHeuristic = Solver.WeightedHeuristic;
-                    break;
-                case GameMode.Mobility:
-                    blackHeuristic = Solver.ActualMobilityHeuristic;
-                    break;
-            }
+                GameMode.Corners => Solver.CornersHeuristic,
+                GameMode.Tile => Solver.TileCountHeuristic,
+                GameMode.Weighted => Solver.WeightedHeuristic,
+                GameMode.Mobility => Solver.ActualMobilityHeuristic,
+                _ => blackHeuristic
+            };
 
-            if (whiteMode == GameMode.Human && blackMode == GameMode.Human)
+            if (_whiteMode == GameMode.Human && _blackMode == GameMode.Human)
             {
-                manager = new GameManager();
+                _manager = new GameManager();
             }
-            else if (whiteMode == GameMode.Human)
+            else if (_whiteMode == GameMode.Human)
             {
-                manager = new GameManager(blackHeuristic, blackPlyVal, TileColor.Black);
+                _manager = new GameManager(blackHeuristic, _blackPlyVal, TileColor.Black);
             }
-            else if (blackMode == GameMode.Human)
+            else if (_blackMode == GameMode.Human)
             {
-                manager = new GameManager(whiteHeuristic, whitePlyVal, TileColor.White);
+                _manager = new GameManager(whiteHeuristic, _whitePlyVal, TileColor.White);
             }
             else
             {
-                manager = new GameManager(blackHeuristic, blackPlyVal, whiteHeuristic, whitePlyVal);
+                _manager = new GameManager(blackHeuristic, _blackPlyVal, whiteHeuristic, _whitePlyVal);
             }
 
-            game = manager.GetGame();
-            playable = game.PossiblePlays();
+            _game = _manager.GetGame();
+            _playable = _game.PossiblePlays();
             UpdateBoard();
         }
 
         private void NextMove(object sender, EventArgs e)
         {
-            if (game.Winner != null) return;
-            Game next = manager.Next();
-            if (next != null) game = next;
-            playable = game.PossiblePlays();
+            if (_game.Winner != null) return;
+            var next = _manager.Next();
+            if (next != null) _game = next;
+            _playable = _game.PossiblePlays();
             UpdateBoard();
-
         }
 
         private void Reset(object sender, EventArgs e)
         {
-            manager.Reset();
-            game = manager.GetGame();
-            playable = game.PossiblePlays();
+            _manager.Reset();
+            _game = _manager.GetGame();
+            _playable = _game.PossiblePlays();
             UpdateBoard();
         }
 
         private void SetPly(object sender, EventArgs e)
         {
-            NumericUpDown c = (NumericUpDown)sender;
+            var c = (NumericUpDown)sender;
             switch (c.Tag)
             {
                 case "white":
-                    whitePlyVal = Convert.ToInt32(c.Value);
+                    _whitePlyVal = Convert.ToInt32(c.Value);
                     break;
                 case "black":
-                    blackPlyVal = Convert.ToInt32(c.Value);
+                    _blackPlyVal = Convert.ToInt32(c.Value);
                     break;
             }
             SetNewGame();

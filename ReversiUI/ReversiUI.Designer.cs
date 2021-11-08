@@ -1,12 +1,15 @@
-﻿namespace ReversiUI
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace ReversiUI
 {
-    partial class ReversiUI
+    partial class ReversiUi
     {
 
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -346,7 +349,7 @@
             this.Controls.Add(this.OptionsPanel);
             this.Controls.Add(this.GamePanel);
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.Name = "ReversiUI";
+            this.Name = "ReversiUi";
             this.Text = "Reversi";
             this.OptionsPanel.ResumeLayout(false);
             this.OptionsPanel.PerformLayout();
@@ -361,26 +364,26 @@
         }
 
         #endregion
-        private System.Windows.Forms.Panel GamePanel;
-        private System.Windows.Forms.Panel OptionsPanel;
-        private System.Windows.Forms.Button StopOrClear;
-        private System.Windows.Forms.Button NextMoveBtn;
-        private System.Windows.Forms.GroupBox blackHeuristic;
-        private System.Windows.Forms.RadioButton cornersBlack;
-        private System.Windows.Forms.RadioButton mobilityBlack;
-        private System.Windows.Forms.RadioButton tileBlack;
-        private System.Windows.Forms.RadioButton humanBlack;
-        private System.Windows.Forms.RadioButton weightedBlack;
-        private System.Windows.Forms.GroupBox whiteHeuristic;
-        private System.Windows.Forms.RadioButton humanWhite;
-        private System.Windows.Forms.RadioButton weightedWhite;
-        private System.Windows.Forms.RadioButton cornersWhite;
-        private System.Windows.Forms.RadioButton mobilityWhite;
-        private System.Windows.Forms.RadioButton tileWhite;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.NumericUpDown whitePly;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.NumericUpDown blackPly;
+        private Panel GamePanel;
+        private Panel OptionsPanel;
+        private Button StopOrClear;
+        private Button NextMoveBtn;
+        private GroupBox blackHeuristic;
+        private RadioButton cornersBlack;
+        private RadioButton mobilityBlack;
+        private RadioButton tileBlack;
+        private RadioButton humanBlack;
+        private RadioButton weightedBlack;
+        private GroupBox whiteHeuristic;
+        private RadioButton humanWhite;
+        private RadioButton weightedWhite;
+        private RadioButton cornersWhite;
+        private RadioButton mobilityWhite;
+        private RadioButton tileWhite;
+        private Label label4;
+        private NumericUpDown whitePly;
+        private Label label1;
+        private NumericUpDown blackPly;
     }
 }
 

@@ -2,9 +2,9 @@
 
 namespace ReversiBase
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             /*int id = int.Parse(Console.ReadLine()); // id of your player.
             int boardSize = int.Parse(Console.ReadLine());
@@ -28,9 +28,6 @@ namespace ReversiBase
 
                 Console.WriteLine("f4"); // a-h1-8
             }*/
-            Tile t = new Tile(TileColor.Blank);
-            Board b = new Board();
-            Play p = new Play(b, TileColor.Black, new Tuple<int, int>(5, 2));
         }
     }
 }

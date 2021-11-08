@@ -14,7 +14,7 @@ namespace ReversiBase
     {
         public TileColor Color { get; private set; }
         public Tuple<int, int> Coords { get; private set; }
-        private bool _placed = false;
+        private bool _placed;
 
         public Tile(TileColor color)
         {

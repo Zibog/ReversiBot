@@ -5,9 +5,9 @@ namespace ReversiBase
 {
     public class Game
     {
-        public bool IsPlayerBlack { set; get; }
-        public Board Board { set; get; }
-        private bool _deadlock = false;
+        public bool IsPlayerBlack { private set; get; }
+        public Board Board { get; }
+        private bool _deadlock;
         public TileColor? Winner
         {
             get
@@ -50,17 +50,17 @@ namespace ReversiBase
             _deadlock = prev._deadlock;
         }
         
-        private Tile Place(int x, int y)
+        private void Place(int x, int y)
         {
             var placement = Board.Place(x, y, IsPlayerBlack ? TileColor.Black : TileColor.White);
             if (placement != null)
                 NextTurn();
-            return placement;
         }
 
-        private Tile Place(Tuple<int, int> coords)
+        private void Place(Tuple<int, int> coords)
         {
-            return Place(coords.Item1, coords.Item2);
+            var (x, y) = coords;
+            Place(x, y);
         }
 
         private void NextTurn()

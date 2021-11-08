@@ -37,15 +37,6 @@ namespace ReversiBase
 
         public Tile this[int x, int y] => _board[x, y];
 
-        public Tile this[string coords]
-        {
-            get 
-            { 
-                var (x, y) = Tile.StringToCoordinates(coords);
-                return this[x, y];
-            }
-        }
-
         public Tile this[Tuple<int, int> coords] => this[coords.Item1, coords.Item2];
 
         public Tile Place(int x, int y, TileColor color)
@@ -66,8 +57,8 @@ namespace ReversiBase
 
         private bool IsAdjacent(int x, int y)
         {
-            for(int xi = Math.Max(0, x - 1); xi <= x + 1 && xi < Size; xi++)
-                for (int yi = Math.Max(0, y - 1); yi <= y + 1 && yi < Size; yi++)
+            for(var xi = Math.Max(0, x - 1); xi <= x + 1 && xi < Size; xi++)
+                for (var yi = Math.Max(0, y - 1); yi <= y + 1 && yi < Size; yi++)
                     if (_board[xi, yi] != null) return true;
             return false;
         }
@@ -75,8 +66,8 @@ namespace ReversiBase
         public List<Tuple<int, int>> GetOpenAdjacentTiles()
         {
             var openAdjacent = new List<Tuple<int, int>>();
-            for (int x = 0; x < Size; x++)
-                for (int y = 0; y < Size; y++)
+            for (var x = 0; x < Size; x++)
+                for (var y = 0; y < Size; y++)
                     if (_board[x, y] == null && IsAdjacent(x, y))
                         openAdjacent.Add(Tuple.Create(x, y));
             return openAdjacent;

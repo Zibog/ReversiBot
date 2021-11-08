@@ -6,8 +6,8 @@ namespace ReversiBase
     public class Solver
     {
         private Func<Game, int> _heuristic;
-        public int MaxPly { private set; get; }
-        public TileColor Color { private set; get; }
+        private int MaxPly { get; }
+        private TileColor Color { get; }
 
         public Solver(TileColor color, Func<Game, TileColor, int> heuristic, int ply)
         {
@@ -34,13 +34,13 @@ namespace ReversiBase
             var bestScore = max ? int.MinValue : int.MaxValue;
             Play bestPlay = null;
 
-            foreach (var pair in game.PossiblePlays())
+            foreach (var (_, play) in game.PossiblePlays())
             {
-                var childScore = AlphaBeta(game.ForkGame(pair.Value), ply - 1, prune, !max, alpha, beta).Item1;
+                var childScore = AlphaBeta(game.ForkGame(play), ply - 1, prune, !max, alpha, beta).Item1;
 
                 if (bestScore != optimizer(bestScore, childScore))
                 {
-                    bestPlay = pair.Value;
+                    bestPlay = play;
                     bestScore = childScore;
                 }
 
@@ -56,7 +56,7 @@ namespace ReversiBase
             return new Tuple<int, Play>(bestScore, bestPlay);
         }
 
-        public void SetHeuristic(Func<Game, TileColor, int> heuristic)
+        private void SetHeuristic(Func<Game, TileColor, int> heuristic)
         {
             _heuristic = game => heuristic(game, Color);
         }
@@ -71,11 +71,12 @@ namespace ReversiBase
             if (black + white == 0)
                 return 0;
 
-            if (color == TileColor.Black)
-                return 100 * (black - white) / (black + white);
-            if (color == TileColor.White)
-                return 100 * (white - black) / (white + black);
-            return 0;
+            return color switch
+            {
+                TileColor.Black => 100 * (black - white) / (black + white),
+                TileColor.White => 100 * (white - black) / (white + black),
+                _ => 0
+            };
         }
 
         public static int ActualMobilityHeuristic(Game game, TileColor color)
@@ -114,9 +115,9 @@ namespace ReversiBase
             var maxScore = 0;
             var minScore = 0;
 
-            foreach (var corner in corners)
+            foreach (var (item1, item2) in corners)
             {
-                var t = game.Board[corner.Item1, corner.Item2];
+                var t = game.Board[item1, item2];
                 if (t != null)
                 {
                     if (t.Color == color)
@@ -160,9 +161,9 @@ namespace ReversiBase
 
             #endregion
 
-            for (int i = 0; i < Board.Size; i++)
+            for (var i = 0; i < Board.Size; i++)
             {
-                for (int j = 0; j < Board.Size; j++)
+                for (var j = 0; j < Board.Size; j++)
                 {
                     var im = i < 4 ? i : 3 - i % 4;
                     var jm = j < 4 ? j : 3 - j % 4;
@@ -177,7 +178,6 @@ namespace ReversiBase
                     }
                 }
             }
-
             return score;
         }
 

@@ -5,23 +5,15 @@ namespace ReversiBase
 {
     public class Play
     {
-        public TileColor Color { private set; get; }
-        public Tuple<int, int> Coords { private set; get; }
+        public TileColor Color { get; }
+        public Tuple<int, int> Coords { get; }
         public List<Tile> AffectedTiles { private set; get; }
-
-        public Play(TileColor color, Tuple<int, int> coords, List<Tile> affected)
-        {
-            Color = color;
-            Coords = coords;
-            AffectedTiles = affected;
-        }
 
         public Play(Board board, TileColor color, Tuple<int, int> coords)
         {
             Color = color;
             Coords = coords;
 
-            var playerColor = color;
             var opponentColor = color == TileColor.Black ? TileColor.White : TileColor.Black;
 
             var x = coords.Item1;
@@ -45,7 +37,7 @@ namespace ReversiBase
                     if (board[ix, iy].Color != opponentColor && ix == x + dx && iy == y + dy)
                         break;
 
-                    if (board[ix, iy].Color == playerColor)
+                    if (board[ix, iy].Color == color)
                     {
                         AddAffected(rayTiles);
                         break;
@@ -59,13 +51,7 @@ namespace ReversiBase
             }
         }
 
-        private void AddAffected(Tile affectedTile)
-        {
-            AffectedTiles ??= new List<Tile>();
-            AffectedTiles.Add(affectedTile);
-        }
-
-        private void AddAffected(List<Tile> affectedTiles)
+        private void AddAffected(IEnumerable<Tile> affectedTiles)
         {
             AffectedTiles ??= new List<Tile>();
             AffectedTiles.AddRange(affectedTiles);
